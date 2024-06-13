@@ -1,0 +1,33 @@
+﻿@{
+    ViewData["Title"] = "Payment";
+}
+
+<div class="container mt-5">
+    <h2>Payment</h2>
+    <form asp-action="ProcessPayment" method="post">
+        <div class="form-group">
+            <label for="CardHolderName">Card Holder Name</label>
+            <input type="text" class="form-control" id="CardHolderName" name="cardHolderName" required />
+        </div>
+        <div class="form-group">
+            <label for="CardNumber">Card Number</label>
+            <input type="text" class="form-control" id="CardNumber" name="cardNumber" required />
+        </div>
+        <div class="form-group">
+            <label for="ExpiryDate">Expiry Date (MM/YY)</label>
+            <input type="text" class="form-control" id="ExpiryDate" name="expiryDate" required />
+        </div>
+        <div class="form-group">
+            <label for="CVV">CVV</label>
+            <input type="text" class="form-control" id="CVV" name="cvv" required />
+        </div>
+        <div class="form-group">
+            <label for="PaymentStatus">Payment Status</label>
+            <select class="form-control" id="PaymentStatus" name="isSuccessful">
+                <option value="true">Success</option>
+                <option value="false">Fail</option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary">Pay Now</button>
+    </form>
+</div>

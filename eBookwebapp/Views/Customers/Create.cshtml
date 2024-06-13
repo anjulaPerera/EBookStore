@@ -1,0 +1,125 @@
+﻿@model eBookwebapp.Models.Customer
+
+@{
+    ViewData["Title"] = "Create";
+    var userId = ViewData["UserID"] as string; // Assuming UserID is stored in ViewData
+}
+
+
+@section Styles{
+
+    <style>
+        /* Apply a background image with gradient overlay */
+        body {
+            background-image: url('/images/details-account.jpg');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .form-container {
+            background-color: rgba(255, 255, 255, 0.9);
+            color: black;
+            border-radius: 15px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            padding: 2rem;
+            width: 100%;
+            max-width: 500px;
+            margin: auto;
+            animation: animate__animated animate__fadeInUp;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        label, input, select {
+            display: block;
+            width: 100%;
+        }
+
+        input, select {
+            padding: 0.5rem;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-top: 0.5rem;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            border: none;
+            border-radius: 5px;
+            padding: 0.75rem 1rem;
+            width: 100%;
+            color: white;
+            cursor: pointer;
+        }
+
+            .btn-primary:hover {
+                background-color: #0056b3;
+            }
+
+        h1, p {
+            text-align: center;
+        }
+    </style>
+
+
+}
+
+<h1 class="animate__animated animate__fadeIn">Welcome to Our Platform!</h1>
+<p class="animate__animated animate__fadeInUp">Please fill in your details to start ordering.</p>
+
+<div class="form-container">
+    <form asp-action="AddNew" method="POST">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="form-group">
+            <label asp-for="Name" class="control-label">Full Name</label>
+            <input asp-for="Name" class="form-control" placeholder="Enter your full name" />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Address" class="control-label">Residential Address</label>
+            <input asp-for="Address" class="form-control" placeholder="Enter your address" />
+            <span asp-validation-for="Address" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="PhoneNumber" class="control-label">Phone Number</label>
+            <input asp-for="PhoneNumber" class="form-control" placeholder="Enter your phone number" />
+            <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="BirthDay" class="control-label">Birth Date</label>
+            <input asp-for="BirthDay" type="date" class="form-control" />
+            <span asp-validation-for="BirthDay" class="text-danger"></span>
+        </div>
+
+        <!-- Hidden User ID -->
+        <input type="hidden" asp-for="UserId" value="@userId" />
+
+        <div class="form-group">
+            <input type="submit" value="Add Your Information" class="btn-primary" />
+        </div>
+    </form>
+</div>
+
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        @if (ViewBag.ErrorMessage != null)
+        {
+            <text>
+                window.onload = function () {
+                    alert("@Html.Raw(ViewBag.ErrorMessage)");
+                };
+            </text>
+        }
+    </script>
+}

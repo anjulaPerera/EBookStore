@@ -1,0 +1,68 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+
+
+
+
+<ul class="navbar-nav">
+@if (SignInManager.IsSignedIn(User))
+{
+
+
+
+        <li class="nav-item mr-2">
+            <a class="nav-link text-dark" asp-controller="Customers" asp-action="Create" title="Details">Account</a>
+    </li>
+
+        @if (await UserManager.IsInRoleAsync(await UserManager.GetUserAsync(User), "Admin"))
+        {
+            <li class="nav-item mr-2">
+                <a class="nav-link text-dark" asp-controller="Admin" asp-action="Dashboard" title="Dashboard">Dashboard</a>
+            </li>
+
+
+            <div class="dropdown mr-2">
+                <a class="btn btn-primary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Manage
+                </a>
+
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                    <a class="dropdown-item" asp-controller="Admin" asp-action="ManageBooks">Manage Books</a>
+                    <a class="dropdown-item" asp-controller="Admin" asp-action="ManageCustomers">Manage Customers</a>
+                    <a class="dropdown-item" asp-controller="Admin" asp-action="ManageOrders">Manage Orders</a>
+                    <a class="dropdown-item" asp-controller="Admin" asp-action="CreateReports">Create Reports</a>
+                    <a class="dropdown-item" asp-controller="Admin" asp-action="AddAdmin">Add Admins</a>
+                </div>
+            </div>
+
+        }
+
+        <li class="nav-item">
+            <a class="nav-link" asp-area="" asp-controller="Orders" asp-action="CustomerOrders">My Orders</a>
+        </li>
+
+        <li class="nav-item mr-2">
+            <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage"><i class="bi bi-person-circle"></i></a>
+        </li>
+
+        <li class="nav-item mr-2">
+            <a class="nav-link text-dark"  asp-controller="Orders" asp-action="Cart" title="Cart"><i class="bi bi-cart4"></i></a>
+        </li>
+
+        <li class="nav-item mr-2">
+        <form  class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                <button type="submit" class="nav-link btn btn-link text-dark"><i class="bi bi-box-arrow-right"></i></button>
+        </form>
+    </li>
+}
+else
+{
+        <li class="nav-item mr-2">
+        <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Register">Register</a>
+    </li>
+        <li class="nav-item mr-2">
+        <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Login">Login</a>
+    </li>
+}
+</ul>

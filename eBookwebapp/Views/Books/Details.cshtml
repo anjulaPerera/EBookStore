@@ -1,0 +1,127 @@
+﻿@model eBookwebapp.Models.BookViewModel
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+@using System.Globalization
+
+@{
+    ViewData["Title"] = "Details";
+    var lkrCulture = new CultureInfo("en-LK");
+}
+
+@section Styles {
+    <style>
+        .book-details {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 100%;
+        }
+
+        .out-of-stock {
+            display: inline-block;
+            padding: 5px 10px;
+            background-color: #dc3545; /* Bootstrap danger color */
+            color: white;
+            font-size: 12px;
+            border-radius: 4px;
+        }
+
+        .reviews-section {
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+        }
+
+        .review {
+            transition: transform 0.2s ease-in-out;
+        }
+
+            .review:hover {
+                transform: scale(1.02);
+            }
+
+        .card-title {
+            color: #333;
+            font-size: 1.2rem;
+        }
+
+        .card-text {
+            color: #555;
+            font-size: 1rem;
+        }
+    </style>
+}
+
+<div class="container mt-5">
+    <div class="row">
+        <!-- Book Image -->
+        <div class="col-md-6">
+            <img src="/@Url.Content(Model.ImagePath)" alt="Book Image" class="img-fluid rounded">
+        </div>
+        <!-- Book Details -->
+        <div class="col-md-6">
+            <div class="book-details">
+                <div>
+                    <h2>@Model.Title</h2>
+                    <p class="text-muted">by @Model.Author</p>
+                    <h3 class="text-primary">@Model.Price.ToString("C", lkrCulture)</h3>
+                    <p class="text-muted">@Model.Description</p>
+                </div>
+                <div>
+                    @if (Model.StockQuantity == 0)
+                    {
+                        <span class="badge out-of-stock">Out of Stock</span>
+                    }
+                    else
+                    {
+                        <form method="post" asp-controller="Orders" asp-action="AddToCart">
+                            <input type="hidden" name="BookID" value="@Model.BookID" />
+                            <div class="form-group">
+                                <label for="quantity">Quantity</label>
+                                <input type="number" id="quantity" name="Quantity" class="form-control" value="1" min="1" max="@Model.StockQuantity" />
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-lg w-100">Order Now</button>
+                        </form>
+                    }
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        var user = await UserManager.GetUserAsync(User);
+                        if (await UserManager.IsInRoleAsync(user, "Admin"))
+                        {
+                            <div class="mt-4">
+                                <a asp-action="Edit" asp-route-id="@Model.BookID" class="btn btn-primary">Edit</a>
+                                <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<h3 class="mt-5">Reviews</h3>
+<div class="reviews-section">
+    @foreach (var review in Model.Reviews)
+    {
+        <div class="review card mb-3">
+            <div class="card-body">
+                <h5 class="card-title"><strong>@review.Customer.UserName</strong> rated it @review.Rating stars</h5>
+                <p class="card-text">@review.ReviewText</p>
+            </div>
+        </div>
+    }
+</div>
+
+@if (User.Identity.IsAuthenticated)
+{
+    var user = await UserManager.GetUserAsync(User);
+    if (await UserManager.IsInRoleAsync(user, "Admin"))
+    {
+        <div>
+            <a asp-action="Edit" asp-route-id="@Model?.BookID" class="btn btn-primary">Edit</a> |
+            <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+        </div>
+    }
+}

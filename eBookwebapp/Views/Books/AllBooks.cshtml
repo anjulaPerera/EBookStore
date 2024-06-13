@@ -1,0 +1,59 @@
+﻿@using System.Linq;
+
+@model IEnumerable<eBookwebapp.Models.Book>
+
+
+@{
+    ViewData["Title"] = "All Books";
+}
+
+
+@section Styles {
+
+    <style>
+    .book-card {
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        padding: 15px;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+        .book-card img {
+            max-width: 100%;
+            height: auto;
+            margin-bottom: 10px;
+        }
+
+    .out-of-stock {
+        display: inline-block;
+        padding: 5px 10px;
+        background-color: red;
+        color: white;
+        font-size: 12px;
+        border-radius: 4px;
+    }
+    </style>
+}
+
+<div class="container">
+    <div class="row">
+        @foreach (var book in Model)
+        {
+            <div class="col-md-3 col-sm-6">
+                <a href="@Url.Action("Details", "Books", new { id = book.BookID })" class="text-decoration-none">
+                    <div class="book-card h-100">
+                        <img src="/@Url.Content(book.ImagePath)" alt="Book Image" />
+                        <h5>@book.Title</h5>
+                        <p class="text-muted">@book.Author</p>
+                        <p class="text-primary">LKR @book.Price</p>
+                        @if (book.StockQuantity == 0)
+                        {
+                            <span class="out-of-stock">Out of Stock</span>
+                        }
+                    </div>
+                </a>
+            </div>
+        }
+    </div>
+</div>

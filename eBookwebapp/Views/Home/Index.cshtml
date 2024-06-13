@@ -1,0 +1,152 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+@model IEnumerable<eBookwebapp.Models.Book>
+
+@using System.Linq;
+
+@section Styles {
+    <style>
+        .book-card {
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 15px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+            .book-card img {
+                max-width: 100%;
+                height: auto;
+                margin-bottom: 10px;
+            }
+
+        .out-of-stock {
+            display: inline-block;
+            padding: 5px 10px;
+            background-color: red;
+            color: white;
+            font-size: 12px;
+            border-radius: 4px;
+        }
+
+        .carousel-caption {
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .carousel-item {
+            height: 500px;
+        }
+
+            .carousel-item img {
+                height: 100%;
+                width: 100%;
+                object-fit: cover;
+            }
+
+        #statusMessage {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            z-index: 1050;
+            min-width: 300px;
+            max-width: 400px;
+            display: none; /* Hidden by default */
+        }
+
+        .caro-img{
+            border-radius:10px !important;
+        }
+
+    </style>
+}
+<div class="container mb-3">
+    <form class="d-flex flex-grow-1">
+        <input class="form-control me-2 flex-grow-1" id="searchQuery" type="search" placeholder="Search for books..." aria-label="Search" autocomplete="off">
+        <div id="suggestions" class="suggestions"></div>
+    </form>
+</div>
+
+<div id="heroCarousel" class="carousel slide mb-3" data-ride="carousel">
+    <ol class="carousel-indicators">
+        <li data-target="#heroCarousel" data-slide-to="0" class="active"></li>
+        <li data-target="#heroCarousel" data-slide-to="1"></li>
+        <li data-target="#heroCarousel" data-slide-to="2"></li>
+    </ol>
+    <div class="carousel-inner caro-img">
+        <div class="carousel-item active">
+            <img src="/images/Slider4.jpg" class="d-block w-100" alt="First slide">
+            <div class="carousel-caption d-none d-md-block">
+                <h5>Quick Ordering</h5>
+                <p>We let you order your books fast and easy</p>
+            </div>
+        </div>
+        <div class="carousel-item">
+            <img src="/images/Slider5.jpg" class="d-block w-100" alt="Second slide">
+            <div class="carousel-caption d-none d-md-block">
+                <h5>Filtering and Searching</h5>
+                <p>Search Exactly What you want easily</p>
+            </div>
+        </div>
+        <div class="carousel-item">
+            <img src="/images/Slider6.jpg" class="d-block w-100" alt="Third slide">
+            <div class="carousel-caption d-none d-md-block">
+                <h5>Cheapest Price</h5>
+                <p>We Strive to provide the cheapest price possible</p>
+            </div>
+        </div>
+    </div>
+    <a class="carousel-control-prev" href="#heroCarousel" role="button" data-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        
+    </a>
+    <a class="carousel-control-next" href="#heroCarousel" role="button" data-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        
+    </a>
+</div>
+
+
+<partial name="_StatusMessage" model="@TempData["StatusMessage"] as string" />
+
+<div class="container">
+    <div class="row">
+        @foreach (var book in Model.Take(4))
+        {
+            <div class="col-md-3 col-sm-6">
+                <a href="@Url.Action("Details", "Books", new { id = book.BookID })" class="text-decoration-none">
+                    <div class="book-card h-100">
+                        <img src="@Url.Content(book.ImagePath)" alt="Book Image" />
+                        <h5>@book.Title</h5>
+                        <p class="text-muted">@book.Author</p>
+                        <p class="text-primary">LKR @book.Price</p>
+                        @if (book.StockQuantity == 0)
+                        {
+                            <span class="out-of-stock">Out of Stock</span>
+                        }
+                    </div>
+                </a>
+            </div>
+        }
+    </div>
+</div>
+
+
+@section Scripts {
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var statusMessage = document.getElementById("statusMessage");
+            if (statusMessage) {
+                statusMessage.style.display = "block";
+                setTimeout(function () {
+                    var alert = new bootstrap.Alert(statusMessage);
+                    alert.close();
+                }, 5000);
+            }
+        });
+    </script>
+}
+

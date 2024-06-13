@@ -1,0 +1,48 @@
+﻿@model IEnumerable<eBookwebapp.Models.Book>
+
+@{
+    ViewData["Title"] = "Search Results";
+}
+
+
+@section Styles {
+    <style>
+        .book-card {
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 15px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+            .book-card img {
+                max-width: 100%;
+                height: auto;
+                margin-bottom: 10px;
+            }
+    </style>
+}
+
+<h2>Search Results</h2>
+
+<div class="container mt-5">
+    <div class="row">
+        @foreach (var book in Model)
+        {
+            <div class="col-md-3 col-sm-6 mb-4">
+                <a href="@Url.Action("Details", "Books", new { id = book.BookID })" class="text-decoration-none">
+                    <div class="book-card h-100">
+                        <img src="/@Url.Content(book.ImagePath)" alt="Book Image" />
+                        <h5>@book.Title</h5>
+                        <p class="text-muted">@book.Author</p>
+                        <p class="text-primary">@book.Price.ToString("C")</p>
+                        @if (book.StockQuantity == 0)
+                        {
+                            <span class="out-of-stock">Out of Stock</span>
+                        }
+                    </div>
+                </a>
+            </div>
+        }
+    </div>
+</div>

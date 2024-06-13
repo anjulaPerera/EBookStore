@@ -1,0 +1,14 @@
+﻿@page
+@model ConfirmEmailModel
+@{
+    ViewData["Title"] = "Confirm email";
+}
+
+<h1>@ViewData["Title"]</h1>
+<partial name="_StatusMessage" model="Model.StatusMessage" />
+
+
+<h3>Welcome to the platform!</h3>
+<p>Before you start ordering, you need to complete your profile.</p>
+
+<a asp-controller="Customers" asp-action="Create" asp-route-userId="@Model.UserID" class="btn btn-primary">Complete Your Profile</a>

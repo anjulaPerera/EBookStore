@@ -1,0 +1,54 @@
+﻿@model IEnumerable<eBookwebapp.Models.CartItem>
+@using System.Globalization
+
+@{
+    ViewData["Title"] = "Your Cart";
+    var lkrCulture = new CultureInfo("en-LK");
+}
+
+@section Styles {
+    <style>
+    #statusMessage {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            z-index: 1050;
+            min-width: 300px;
+            max-width: 400px;
+            display: none; /* Hidden by default */
+        }
+    </style>
+
+}
+
+
+<partial name="_StatusMessage" model="@TempData["StatusMessage"] as string" />
+<h2>Your Cart</h2>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Author</th>
+            <th>Price</th>
+            <th>Quantity</th>
+            <th>Subtotal</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Title</td>
+                <td>@item.Author</td>
+                <td>@item.Price.ToString("C",lkrCulture )</td>
+                <td>@item.Quantity</td>
+                <td>LKR @(item.Price * item.Quantity)</td>
+                <td>
+                    <a href="@Url.Action("RemoveFromCart", "Orders", new { bookId = item.BookID })" class="btn btn-danger">Remove</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<a href="@Url.Action("Checkout", "Orders")" class="btn btn-success">Proceed to Checkout</a>

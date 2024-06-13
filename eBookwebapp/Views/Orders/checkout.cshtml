@@ -1,0 +1,39 @@
+﻿@model eBookwebapp.Models.CheckoutViewModel
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+
+@{
+    ViewData["Title"] = "Checkout";
+}
+
+<div class="container mt-5">
+    <h2>Checkout</h2>
+    <form asp-action="ProcessCheckout" method="post" id="checkoutForm">
+        <div class="form-group">
+            <label for="FullName">Full Name</label>
+            <input type="text" class="form-control" id="FullName" name="FullName" required />
+        </div>
+        <div class="form-group">
+            <label for="AddressLine1">Address Line 1</label>
+            <input type="text" class="form-control" id="AddressLine1" name="AddressLine1" required />
+        </div>
+        <div class="form-group">
+            <label for="AddressLine2">Address Line 2</label>
+            <input type="text" class="form-control" id="AddressLine2" name="AddressLine2" />
+        </div>
+        <div class="form-group">
+            <label for="City">City</label>
+            <input type="text" class="form-control" id="City" name="City" required />
+        </div>
+        <div class="form-group">
+            <label for="State">State</label>
+            <input type="text" class="form-control" id="State" name="State" required />
+        </div>
+        <div class="form-group">
+            <label for="ZipCode">Zip Code</label>
+            <input type="text" class="form-control" id="ZipCode" name="ZipCode" required />
+        </div>
+        <button type="submit" class="btn btn-primary">Proceed to Payment</button>
+    </form>
+</div>

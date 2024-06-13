@@ -1,0 +1,127 @@
+﻿@model DashboardViewModel
+
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<h2 class="my-4 text-center">Dashboard</h2>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 mb-4">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    Total Income
+                </div>
+                <div class="card-body">
+                    <canvas id="incomeChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-4">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    Actions
+                </div>
+                <div class="card-body">
+                    <a href="@Url.Action("GeneratePdf")" class="btn btn-primary btn-block m-2">Generate PDF</a>
+                    <a asp-controller="Admin" asp-action="ManageBooks" class="btn btn-primary btn-block m-2">Manage Books</a>
+                    <a asp-controller="Admin" asp-action="ManageOrders" class="btn btn-primary btn-block m-2">Manage Orders</a>
+                    <a asp-controller="Admin" asp-action="ManageCustomers" class="btn btn-primary btn-block m-2">Manage Customers</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12 mb-4">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    New Orders
+                </div>
+                <div class="card-body p-0">
+                    <table class="table table-hover mb-0">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th>Order ID</th>
+                                <th>Customer</th>
+                                <th>Order Date</th>
+                                <th>Total Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var order in Model.NewOrders)
+                            {
+                                <tr>
+                                    <td>@order.OrderID</td>
+                                    <td>@order.CustomerName</td>
+                                    <td>@order.OrderDate.ToShortDateString()</td>
+                                    <td>LKR @order.TotalAmount</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12 mb-4">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    Most Sold Books
+                </div>
+                <div class="card-body p-0">
+                    <table class="table table-hover mb-0">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th>Book Title</th>
+                                <th>No. of Books Sold</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var book in Model.SoldBooks)
+                            {
+                                <tr>
+                                    <td>@book.BookTitle</td>
+                                    <td>@book.NoSold</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        var ctx = document.getElementById('incomeChart').getContext('2d');
+        var incomeChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.IncomeReport.Select(r => $"{r.Month}/{r.Year}"))),
+                datasets: [{
+                    label: 'Total Income',
+                    data: @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model.IncomeReport.Select(r => r.TotalIncome))),
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1,
+                    fill: false
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                },
+                responsive: true,
+                maintainAspectRatio: false
+            }
+        });
+    </script>
+}

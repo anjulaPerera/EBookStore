@@ -1,0 +1,95 @@
+﻿@model IEnumerable<OrderViewModel>
+
+@section Styles{
+    <style>
+
+        #order-list{
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 25px;
+        }
+
+        .order{
+            border: 1px solid #000;
+            padding:10px;
+            width: 100%;
+            border-radius: 10px;
+            width: 49%;
+        }
+
+        .order ul{
+            padding-left: 8px;
+        }
+
+        .order li{
+            list-style: none;
+        }
+
+        .order table{
+            width: 40%;
+        }
+
+        .order button{
+            background-color: var(--bs-link-color);
+            color: #fff;
+            text-decoration: none;
+        }
+
+        .book-item{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        table, tr,td{
+            border: none;
+        }
+
+        .book-title{
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            justify-content: flex-start;
+        }
+
+        .order-number{
+            padding-left:8px;
+        }
+
+    </style>
+}
+
+<h2>Your Orders</h2>
+<div class="container" id="order-list">
+@foreach (var order in Model)
+{
+    <div class="order">
+        <h4 class="order-number">Order #@order.OrderID</h4>
+        <table class="table">
+            <tr>
+                <td><strong>Order Date</strong></td>
+                <td>: @order.OrderDate.ToShortDateString()</td>
+            </tr>
+            <tr>
+                <td><strong>Total Amount</strong></td>
+                <td>: LKR @order.TotalAmount</td>
+            </tr>
+        </table>
+        <ul>
+            @foreach (var item in order.OrderItems)
+            {
+                <li class="book-item">
+                    <h4 class="book-title"><i class="bi bi-bookmark-check"></i>@item.BookTitle</h4>
+                    <form asp-controller="Reviews" asp-action="Review" method="post" style="display:inline;">
+                        <input type="hidden" name="bookId" value="@item.BookID" />
+                        <input type="hidden" name="orderId" value="@order.OrderID" />
+                        <button type="submit" class="btn btn-link">Review this book</button>
+                    </form>
+                </li>
+            }
+        </ul>
+    </div>
+}
+</div>
